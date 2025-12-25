@@ -17,7 +17,7 @@ const jwt= require("jsonwebtoken");
       password,
     });
     await user1.save();
-    const token = jwt.sign({ userId: user1._id }, process.env.JWT_TOKEN, {
+    const token = jwt.sign({ userId: user1._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
     });
 
@@ -63,7 +63,7 @@ const login = async (req, res) => {
     // 🪙 Generate JWT token
     const token = jwt.sign(
       { userId: user._id },
-      process.env.JWT_TOKEN,
+      process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );
 

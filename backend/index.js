@@ -7,6 +7,9 @@ require("dotenv").config();
 const Auth = require("./router/auth.js");
 const app = express();
 const port = 9000;
+const videoRoutes = require("./router/video.js");
+
+
 
 async function main() {
   try {
@@ -16,7 +19,7 @@ async function main() {
     console.error("DB connection error:", err.message);
   }
 }
-
+app.use("/api/videos", videoRoutes);
 app.use(express.json())
 app.use(cookieParser())
 app.use("/auth",Auth)

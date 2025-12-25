@@ -1,13 +1,15 @@
 const jwt = require('jsonwebtoken')
 const Users = require('../Models/User.js')
+const multer = require("multer");
 
-const protectRoute = async (req, res, next) => {
+const protect = async (req, res, next) => {
     try {
         const token = req.cookies.jwt;
         if (!token) {
             return res.status(401).json({ message: "Unauthorized - No token provided" });
         }
-        const decoded = jwt.verify(token, process.env.JWT_TOKEN);
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
 
         if (!decoded) { return res.status(401).json({ message: "in valid token" }); }
 
@@ -27,4 +29,23 @@ const protectRoute = async (req, res, next) => {
 
 
 }
-module.exports ={protectRoute}
+
+
+
+
+const storage = multer.diskStorage({});
+
+const fileFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith("video")) {
+    cb(null, true);
+  } else {
+    cb(new Error("Only video files are allowed"), false);
+  }
+};
+
+const upload = multer({ storage, fileFilter });
+
+module.exports = {
+  protect,
+  upload,
+};
