@@ -1,9 +1,16 @@
 import { Link } from "react-router-dom";
 
-const Home = () => {
+const Home = ({ sidebarExpanded }) => {
   return (
-    <div style={{ fontFamily: "sans-serif" }}>
-
+    <div
+      style={{
+        fontFamily: "sans-serif",
+        minHeight: "100vh",
+        paddingTop: "64px", // offset for topbar height
+        paddingLeft: sidebarExpanded ? "256px" : "64px", // offset for sidebar
+        transition: "padding-left 0.3s",
+      }}
+    >
       {/* 🔹 HERO SECTION */}
       <section
         style={{
@@ -11,23 +18,39 @@ const Home = () => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "linear-gradient(135deg, #0f2027, #203a43, #2c5364)",
-          color: "#fff",
           textAlign: "center",
-          padding: "40px",
+          padding: "20px 15px",
         }}
       >
-        <div style={{ maxWidth: "700px" }}>
-          <h1 style={{ fontSize: "3rem", marginBottom: "20px" }}>
+        <div style={{ maxWidth: "700px", width: "100%" }}>
+          <h1
+            style={{
+              fontSize: "clamp(2rem, 5vw, 3rem)",
+              marginBottom: "20px",
+            }}
+          >
             MediaStack
           </h1>
 
-          <p style={{ fontSize: "1.2rem", marginBottom: "30px", opacity: 0.9 }}>
+          <p
+            style={{
+              fontSize: "clamp(1rem, 2.5vw, 1.2rem)",
+              marginBottom: "30px",
+              opacity: 0.9,
+            }}
+          >
             Upload, manage and stream your videos securely with real-time
             progress and cloud storage.
           </p>
 
-          <div style={{ display: "flex", gap: "15px", justifyContent: "center" }}>
+          <div
+            style={{
+              display: "flex",
+              gap: "15px",
+              justifyContent: "center",
+              flexWrap: "wrap",
+            }}
+          >
             <Link to="/upload">
               <button style={primaryBtn}>Upload Video</button>
             </Link>
@@ -40,7 +63,7 @@ const Home = () => {
       </section>
 
       {/* 🔹 FEATURES */}
-      <section style={{ padding: "60px 20px", background: "#f9f9f9" }}>
+      <section style={{ padding: "60px 20px" }}>
         <h2 style={sectionTitle}>Why MediaStack?</h2>
 
         <div style={grid}>
@@ -82,6 +105,7 @@ const Home = () => {
           textAlign: "center",
           padding: "20px",
           fontSize: "0.9rem",
+          marginTop: "40px",
         }}
       >
         © {new Date().getFullYear()} MediaStack · Built with MERN
@@ -103,7 +127,9 @@ const Feature = ({ title, desc }) => (
 
 const Step = ({ number, text }) => (
   <div style={card}>
-    <h1 style={{ fontSize: "2.5rem", color: "#2c5364" }}>{number}</h1>
+    <h1 style={{ fontSize: "clamp(2rem, 5vw, 2.5rem)", color: "#2c5364" }}>
+      {number}
+    </h1>
     <p>{text}</p>
   </div>
 );
@@ -113,7 +139,7 @@ const Step = ({ number, text }) => (
 const sectionTitle = {
   textAlign: "center",
   marginBottom: "40px",
-  fontSize: "2rem",
+  fontSize: "clamp(1.5rem, 4vw, 2rem)",
 };
 
 const grid = {
@@ -145,9 +171,9 @@ const primaryBtn = {
 const secondaryBtn = {
   padding: "12px 24px",
   fontSize: "1rem",
-  background: "transparent",
+  background: "linear-gradient(to right, #7f00ff, #e100ff)",
   color: "#fff",
-  border: "2px solid #fff",
+  border: "none",
   borderRadius: "25px",
   cursor: "pointer",
 };

@@ -11,7 +11,7 @@ import ProfilePage from "./pages/Profile";
 
 function App() {
   const { user, isLoading } = userAuth();
-  console.log(user);
+  // console.log(user);
 
 
 
@@ -21,24 +21,25 @@ function App() {
 
      <Routes>
 
-  {/* ================= NOT LOGGED IN ================= */}
+
   {!user && (
     <>
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
 
-      {/* redirect everything else to login */}
+
       <Route path="*" element={<Navigate to="/login" replace />} />
     </>
   )}
 
-  {/* ================= LOGGED IN ================= */}
+
   {user!==null && (
     <>
       <Route
         path="/"
         element={
           <DashboardLayout>
+            
             <Home />
           </DashboardLayout>
         }

@@ -41,13 +41,13 @@ export default function Signup() {
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [problem, setProblem] = useState("");
 
-  /* ================= INPUT CHANGE ================= */
+
   const change = (e) => {
     setUserInfo({ ...userInfo, [e.target.name]: e.target.value });
     setProblem("");
   };
 
-  /* ================= SUBMIT ================= */
+
   const control = async (e) => {
     e.preventDefault();
 

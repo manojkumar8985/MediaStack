@@ -26,17 +26,15 @@ const MyVideos = () => {
   }, []);
 
   const sortedVideos = [...videos].sort((a, b) => {
-    if (sortBy === "latest")
-      return new Date(b.createdAt) - new Date(a.createdAt);
-    if (sortBy === "oldest")
-      return new Date(a.createdAt) - new Date(b.createdAt);
+    if (sortBy === "latest") return new Date(b.createdAt) - new Date(a.createdAt);
+    if (sortBy === "oldest") return new Date(a.createdAt) - new Date(b.createdAt);
     if (sortBy === "az") return a.title.localeCompare(b.title);
     if (sortBy === "za") return b.title.localeCompare(a.title);
     return 0;
   });
 
   if (loading)
-    return <p style={{ textAlign: "center" }}>Loading videos…</p>;
+    return <p style={{ textAlign: "center", marginTop: "50px" }}>Loading videos…</p>;
 
   return (
     <div style={{ maxWidth: "1200px", margin: "40px auto", padding: "15px" }}>
@@ -110,7 +108,7 @@ const MyVideos = () => {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
             gap: "20px",
           }}
         >
@@ -119,14 +117,45 @@ const MyVideos = () => {
               key={video._id}
               style={{
                 background: "#fff",
-                borderRadius: "12px",
+                borderRadius: "16px",
                 padding: "12px",
-                boxShadow: "0 4px 10px rgba(0,0,0,0.08)",
+                boxShadow: "0 6px 15px rgba(0,0,0,0.1)",
+                transition: "transform 0.2s, box-shadow 0.2s",
+                cursor: "pointer",
+                position: "relative",
+                display: "flex",
+                flexDirection: "column",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-5px)";
+                e.currentTarget.style.boxShadow = "0 12px 25px rgba(0,0,0,0.15)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = "0 6px 15px rgba(0,0,0,0.1)";
               }}
             >
+              {/* GREEN SAFE DOT */}
+              {!brokenVideos[video._id] && (
+                <span
+                  style={{
+                    position: "absolute",
+                    top: "12px",
+                    right: "12px",
+                    width: "12px",
+                    height: "12px",
+                    borderRadius: "50%",
+                    backgroundColor: "#10b981",
+                    boxShadow: "0 0 4px rgba(16,185,129,0.6)",
+                  }}
+                  title="Safe Video"
+                />
+              )}
+
               <h4
                 style={{
                   fontSize: "16px",
+                  fontWeight: 600,
                   marginBottom: "8px",
                   whiteSpace: "nowrap",
                   overflow: "hidden",
@@ -137,41 +166,48 @@ const MyVideos = () => {
               </h4>
 
               {video.status === "processing" && (
-                <p style={{ color: "#f59e0b" }}>⏳ Processing…</p>
+                <p style={{ color: "#f59e0b", fontWeight: 500 }}>⏳ Processing…</p>
               )}
 
-              {video.status !== "processing" &&
-                brokenVideos[video._id] && (
-                  <p style={{ color: "red" }}>❌ Video unavailable</p>
-                )}
+              {video.status !== "processing" && brokenVideos[video._id] && (
+                <p style={{ color: "red", fontWeight: 500 }}>❌ Video unavailable</p>
+              )}
 
-              {video.status !== "processing" &&
-                !brokenVideos[video._id] && (
-                  <video
-                    controls
-                    preload="metadata"
-                    onClick={() => setActiveVideo(video)}
-                    onError={() =>
-                      setBrokenVideos((prev) => ({
-                        ...prev,
-                        [video._id]: true,
-                      }))
-                    }
-                    style={{
-                      width: "100%",
-                      borderRadius: "8px",
-                      cursor: "pointer",
-                    }}
-                  >
-                    <source src={video.videoUrl} type="video/mp4" />
-                  </video>
-                )}
+              {video.status !== "processing" && !brokenVideos[video._id] && (
+                <video
+                  controls
+                  preload="metadata"
+                  onClick={() => setActiveVideo(video)}
+                  onError={() =>
+                    setBrokenVideos((prev) => ({
+                      ...prev,
+                      [video._id]: true,
+                    }))
+                  }
+                  style={{
+                    width: "100%",
+                    borderRadius: "12px",
+                    marginTop: "10px",
+                    border: "2px solid #e5e7eb",
+                    transition: "border 0.2s",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.border = "2px solid #6366f1";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.border = "2px solid #e5e7eb";
+                  }}
+                >
+                  <source src={video.videoUrl} type="video/mp4" />
+                </video>
+              )}
 
               <p
                 style={{
-                  marginTop: "6px",
+                  marginTop: "8px",
                   fontSize: "13px",
                   color: "#666",
+                  fontWeight: 500,
                 }}
               >
                 Status: {video.status}
