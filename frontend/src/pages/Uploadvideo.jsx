@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import socket from "../socket";
+import socket from "../Socket";
 import toast from "react-hot-toast";
 const UploadVideo = () => {
   const [title, setTitle] = useState("");
