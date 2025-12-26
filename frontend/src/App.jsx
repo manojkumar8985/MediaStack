@@ -1,35 +1,95 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Routes, Route, Navigate } from "react-router-dom";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import UploadVideo from "./pages/Uploadvideo";
+import { Toaster } from "react-hot-toast";
+import userAuth from "./hooks/useAuthUser";
+import DashboardLayout from "./Dashboard";
+import MyVideos from "./pages/MyVideos";
+import ProfilePage from "./pages/Profile";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { user, isLoading } = userAuth();
+  console.log(user);
+
+
+
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+
+     <Routes>
+
+  {/* ================= NOT LOGGED IN ================= */}
+  {!user && (
+    <>
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
+
+      {/* redirect everything else to login */}
+      <Route path="*" element={<Navigate to="/login" replace />} />
     </>
-  )
+  )}
+
+  {/* ================= LOGGED IN ================= */}
+  {user!==null && (
+    <>
+      <Route
+        path="/"
+        element={
+          <DashboardLayout>
+            <Home />
+          </DashboardLayout>
+        }
+      />
+
+      <Route
+        path="/home"
+        element={
+          <DashboardLayout>
+            <Home />
+          </DashboardLayout>
+        }
+      />
+
+      <Route
+        path="/upload"
+        element={
+          <DashboardLayout>
+            <UploadVideo />
+          </DashboardLayout>
+        }
+      />
+
+      <Route
+        path="/myvideos"
+        element={
+          <DashboardLayout>
+            <MyVideos />
+          </DashboardLayout>
+        }
+      />
+
+      <Route
+        path="/profile"
+        element={
+          <DashboardLayout>
+            <ProfilePage />
+          </DashboardLayout>
+        }
+      />
+
+      {/* redirect login/signup if already logged in */}
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </>
+  )}
+
+</Routes>
+
+      <Toaster position="top-center" />
+    </>
+  );
 }
 
-export default App
+export default App;

@@ -7,7 +7,7 @@ const app = express.Router();
 
 app.post("/signup", signup);
 app.post("/login", login);
-app.get("/logout", logout);
+app.post("/logout", logout);
 
 app.get("/me",protect,(req,res)=>{
     res.status(200).json({success:true,user:req.user})

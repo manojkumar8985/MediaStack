@@ -1,5 +1,5 @@
 const express = require("express");
-const { uploadVideo } = require("../Controller/VideoController");
+const { uploadVideo,getMyVideos ,getVideoCount} = require("../Controller/VideoController");
 const { upload, protect } = require("../middleware/protect");
 
 
@@ -11,5 +11,11 @@ router.post(
   upload.single("video"),
   uploadVideo
 );
+// routes/videoRoutes.js
+router.get("/count",  protect, getVideoCount);
+
+
+router.get("/myvideos", protect, getMyVideos);
 
 module.exports = router;
+
