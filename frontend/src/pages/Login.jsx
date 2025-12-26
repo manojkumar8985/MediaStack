@@ -39,13 +39,12 @@ export default function Signup() {
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [problem, setProblem] = useState("");
 
-  /* ================= INPUT CHANGE ================= */
   const change = (e) => {
     setUserInfo({ ...userInfo, [e.target.name]: e.target.value });
     setProblem("");
   };
 
-  /* ================= SUBMIT ================= */
+
   const control = async (e) => {
     e.preventDefault();
 
@@ -62,7 +61,7 @@ export default function Signup() {
 
     try {
       await axios.post(
-        "http://localhost:9000/auth/login",
+        "https://mediastack-1.onrender.com/auth/login",
         {
           userName: userInfo.fullName,
           password: userInfo.password,

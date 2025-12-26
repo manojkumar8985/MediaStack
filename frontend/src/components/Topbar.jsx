@@ -56,7 +56,7 @@ export default function Topbar({ sidebarExpanded, pageTitle = "Dashboard" }) {
 const handleLogout = async () => {
   try {
     await axios.post(
-      "http://localhost:9000/auth/logout",
+      "https://mediastack-1.onrender.com/auth/logout",
       {},
       { withCredentials: true }
     );

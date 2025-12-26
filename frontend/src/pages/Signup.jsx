@@ -74,7 +74,7 @@ export default function Signup() {
 
     try {
       await axios.post(
-        "http://localhost:9000/auth/signup",
+        "https://mediastack-1.onrender.com/auth/signup",
         {
           userName: userInfo.fullName,
           email: userInfo.email,

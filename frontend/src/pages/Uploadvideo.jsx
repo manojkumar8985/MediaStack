@@ -39,7 +39,7 @@ const UploadVideo = () => {
       setMessage("");
 
       await axios.post(
-        "http://localhost:9000/api/videos/upload",
+        "https://mediastack-1.onrender.com/api/videos/upload",
         formData,
         {
           withCredentials: true,

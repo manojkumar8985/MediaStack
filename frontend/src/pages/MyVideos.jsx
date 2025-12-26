@@ -12,7 +12,7 @@ const MyVideos = () => {
     const fetchVideos = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:9000/api/videos/myvideos",
+          "https://mediastack-1.onrender.com/api/videos/myvideos",
           { withCredentials: true }
         );
         setVideos(res.data);
