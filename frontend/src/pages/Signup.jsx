@@ -4,7 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useState } from "react";
-
+import { Navigate } from "react-router-dom";
 const features = [
   {
     title: "Shockingly affordable 💸",
@@ -84,6 +84,7 @@ export default function Signup() {
       );
 
       queryClient.invalidateQueries({ queryKey: ["authUser"] });
+      Navigate("/");
       toast.success("Signup successful 🎉");
     } catch (err) {
       setProblem(err.response?.data?.message || "Something went wrong");

@@ -31,8 +31,8 @@ const signup = async (req, res) => {
     res.cookie("jwt", token, {
       maxAge: 7 * 24 * 60 * 60 * 1000,
       httpOnly: true,
-      sameSite: "lax", // 🔥 CHANGE from strict → lax
-      secure: process.env.NODE_ENV === "production",
+      sameSite: "none", // 🔥 CHANGE from strict/lax → none
+      secure: true,
       path: "/", // 🔥 REQUIRED
     });
 
@@ -75,8 +75,8 @@ const login = async (req, res) => {
     res.cookie("jwt", token, {
       maxAge: 7 * 24 * 60 * 60 * 1000,
       httpOnly: true,
-      sameSite: "lax",
-      secure: process.env.NODE_ENV === "production",
+      sameSite: "none",
+      secure: true,
       path: "/", // 🔥 REQUIRED
     });
 
@@ -94,8 +94,8 @@ const logout = async (req, res) => {
     // ✅ COOKIE CLEAR (OPTIONS MUST MATCH LOGIN)
     res.clearCookie("jwt", {
       httpOnly: true,
-      sameSite: "lax",
-      secure: false,
+      sameSite: "none",
+      secure: true,
       path: "/",
     });
 

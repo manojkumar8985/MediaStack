@@ -11,7 +11,7 @@ import ProfilePage from "./pages/Profile";
 
 function App() {
   const { user, isLoading } = userAuth();
-  // console.log(user);
+  console.log(user);
 
 
 

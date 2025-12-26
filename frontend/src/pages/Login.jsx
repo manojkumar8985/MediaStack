@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -28,8 +28,9 @@ const features = [
   },
 ];
 
-export default function Signup() {
+export default function Login() {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const [userInfo, setUserInfo] = useState({
     fullName: "",
@@ -70,7 +71,8 @@ export default function Signup() {
       );
 
       queryClient.invalidateQueries({ queryKey: ["authUser"] });
-      toast.success("Signup success");
+      toast.success("Login successful!");
+      navigate("/");
     } catch (err) {
       setProblem(err.response?.data?.message || "Something went wrong");
     }

@@ -10,6 +10,7 @@ const Auth = require("./router/auth.js");
 const videoRoutes = require("./router/video.js");
 
 const app = express();
+app.set('trust proxy', 1); // Trust the first proxy
 const port = 9000;
 
 
@@ -22,13 +23,22 @@ async function main() {
   }
 }
 
-app.use(cors({
-  origin: "http://localhost:5173", 
-  credentials: true,               
-}));
-
 app.use(express.json());
 app.use(cookieParser());
+
+const allowedOrigins = ["http://localhost:5173", "https://mediastack-1.onrender.com"];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    // allow requests with no origin (like mobile apps or curl requests)
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+}));
 
 
 app.use("/auth", Auth);
@@ -43,7 +53,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173", "https://mediastack-1.onrender.com"],
     credentials: true,
   },
 });
