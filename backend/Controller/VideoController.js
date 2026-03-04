@@ -24,7 +24,7 @@ exports.uploadVideo = async (req, res) => {
 
     // ☁️ Upload to Cloudinary
     const result = await cloudinary.uploader.upload(req.file.path, {
-      resource_type: "video",
+      resource_type: "auto",
     });
 
     io.emit("upload-progress", { percent: 100 });
@@ -50,10 +50,21 @@ exports.uploadVideo = async (req, res) => {
 
 exports.getMyVideos = async (req, res) => {
   try {
-    const videos = await Video.find({ user: req.user.id }).sort({
+    const videos = await Video.find({}).sort({
       createdAt: -1,
     });
 
+    res.status(200).json(videos);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.getPublicVideos = async (req, res) => {
+  try {
+    const videos = await Video.find({ status: { $ne: "processing" } }).sort({
+      createdAt: -1,
+    });
     res.status(200).json(videos);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -71,5 +82,22 @@ exports.getVideoCount = async (req, res) => {
     res.status(200).json({ count });
   } catch (error) {
     res.status(500).json({ message: "Failed to fetch video count" });
+  }
+};
+
+exports.deleteVideo = async (req, res) => {
+  try {
+    const video = await Video.findById(req.params.id);
+    if (!video) return res.status(404).json({ message: "Video not found" });
+
+    // ANYONE CAN DELETE NOW
+    // if (video.user.toString() !== req.user.id.toString()) {
+    //   return res.status(403).json({ message: "Unauthorized to delete this asset" });
+    // }
+
+    await video.deleteOne();
+    res.status(200).json({ message: "Asset deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };

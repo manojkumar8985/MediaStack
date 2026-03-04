@@ -17,7 +17,7 @@ const ProfilePage = () => {
     const fetchVideoCount = async () => {
       try {
         const res = await axios.get(
-          "https://mediastack-1.onrender.com/api/videos/count",
+          `${import.meta.env.VITE_API_BASE_URL}/api/videos/count`,
           { withCredentials: true }
         );
         setVideoCount(res.data.count);
@@ -36,7 +36,7 @@ const ProfilePage = () => {
   const handleLogout = async () => {
     try {
       await axios.post(
-        "https://mediastack-1.onrender.com/auth/logout",
+        `${import.meta.env.VITE_API_BASE_URL}/auth/logout`,
         {},
         { withCredentials: true }
       );

@@ -5,28 +5,28 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
-const features = [
-  {
-    title: "Shockingly affordable 💸",
-    desc: "Powerful travel tools at a budget-friendly price.",
-    color: "from-pink-400 to-pink-600",
-  },
-  {
-    title: "Blazing fast ⚡",
-    desc: "Optimized performance with instant responses.",
-    color: "from-green-400 to-green-600",
-  },
-  {
-    title: "Beautiful video 🎬",
-    desc: "Immersive video experiences with smooth playback.",
-    color: "from-blue-400 to-blue-600",
-  },
-  {
-    title: "Built for developers 👨‍💻",
-    desc: "Clean architecture & scalable components.",
-    color: "from-yellow-400 to-yellow-600",
-  },
-];
+// const features = [
+//   {
+//     title: "Shockingly affordable 💸",
+//     desc: "Powerful travel tools at a budget-friendly price.",
+//     color: "from-pink-400 to-pink-600",
+//   },
+//   {
+//     title: "Blazing fast ⚡",
+//     desc: "Optimized performance with instant responses.",
+//     color: "from-green-400 to-green-600",
+//   },
+//   {
+//     title: "Beautiful video 🎬",
+//     desc: "Immersive video experiences with smooth playback.",
+//     color: "from-blue-400 to-blue-600",
+//   },
+//   {
+//     title: "Built for developers 👨‍💻",
+//     desc: "Clean architecture & scalable components.",
+//     color: "from-yellow-400 to-yellow-600",
+//   },
+// ];
 
 export default function Signup() {
   const queryClient = useQueryClient();
@@ -74,7 +74,7 @@ export default function Signup() {
 
     try {
       await axios.post(
-        "https://mediastack-1.onrender.com/auth/signup",
+        `${import.meta.env.VITE_API_BASE_URL}/auth/signup`,
         {
           userName: userInfo.fullName,
           email: userInfo.email,
@@ -94,6 +94,7 @@ export default function Signup() {
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#fdf7ef] flex items-center justify-center px-4">
       {/* Background blobs */}
+
       <motion.div
         animate={{ scale: [1, 1.2, 1], rotate: [0, 90, 0] }}
         transition={{ duration: 20, repeat: Infinity }}
@@ -105,6 +106,12 @@ export default function Signup() {
         className="absolute -bottom-32 -right-32 w-96 h-96 bg-blue-300 rounded-full blur-3xl opacity-30"
       />
 
+      <div className="absolute top-8 w-full flex justify-center z-50">
+        <Link to="/">
+          <img src="/logo.png" alt="MediaStack" className="h-16 w-auto" />
+        </Link>
+      </div>
+
       <div className="relative z-10 max-w-6xl w-full grid lg:grid-cols-2 gap-12 items-center">
         {/* LEFT FEATURES */}
         <motion.div
@@ -114,7 +121,7 @@ export default function Signup() {
           variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.15 } } }}
           className="grid sm:grid-cols-2 gap-6"
         >
-          {features.map((item, i) => (
+          {/* {features.map((item, i) => (
             <motion.div
               key={i}
               variants={{
@@ -128,7 +135,7 @@ export default function Signup() {
               <h3 className="font-semibold text-lg">{item.title}</h3>
               <p className="text-gray-600 text-sm mt-2">{item.desc}</p>
             </motion.div>
-          ))}
+          ))} */}
         </motion.div>
 
         {/* RIGHT FORM */}
@@ -139,10 +146,7 @@ export default function Signup() {
           transition={{ duration: 0.8 }}
           className="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md mx-auto"
         >
-          <h2 className="text-3xl font-bold text-center">MediaStack 🎥</h2>
-          <p className="text-gray-500 text-center text-sm mb-6">
-            Capture moments. Share journeys.
-          </p>
+
 
           {problem && (
             <div className="mb-4 bg-red-600 text-white p-4 rounded text-center">
@@ -157,8 +161,8 @@ export default function Signup() {
                   {field === "fullName"
                     ? "Username"
                     : field === "repassword"
-                    ? "Re-enter Password"
-                    : field.charAt(0).toUpperCase() + field.slice(1)}
+                      ? "Re-enter Password"
+                      : field.charAt(0).toUpperCase() + field.slice(1)}
                 </label>
                 <motion.input
                   name={field}
@@ -193,10 +197,9 @@ export default function Signup() {
               whileHover={{ scale: acceptedTerms ? 1.05 : 1 }}
               whileTap={{ scale: acceptedTerms ? 0.95 : 1 }}
               className={`w-full py-3 rounded-xl font-semibold text-white shadow-lg
-                ${
-                  acceptedTerms
-                    ? "bg-gradient-to-r from-blue-500 to-cyan-500"
-                    : "bg-gray-300 cursor-not-allowed"
+                ${acceptedTerms
+                  ? "bg-gradient-to-r from-blue-500 to-cyan-500"
+                  : "bg-gray-300 cursor-not-allowed"
                 }`}
             >
               Start Recording 🚀
@@ -209,6 +212,16 @@ export default function Signup() {
               Login
             </Link>
           </p>
+
+          <div className="mt-8 pt-6 border-t border-gray-100 text-center">
+            <Link
+              to="/gallery"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gray-50 hover:bg-gray-100 text-gray-700 font-medium rounded-xl transition-colors border border-gray-200"
+            >
+              <span className="text-xl">🎬</span>
+              View Public Timeline
+            </Link>
+          </div>
         </motion.div>
       </div>
     </div>

@@ -4,7 +4,7 @@ import socket from "../Socket";
 import toast from "react-hot-toast";
 const UploadVideo = () => {
   const [title, setTitle] = useState("");
-  const [video, setVideo] = useState(null);
+  const [file, setFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
@@ -22,15 +22,14 @@ const UploadVideo = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!video) {
-      
-      toast.error("Please select a video file");
+    if (!file) {
+      toast.error("Please select a media file");
       return;
     }
 
     const formData = new FormData();
     formData.append("title", title);
-    formData.append("video", video);
+    formData.append("video", file);
     formData.append("socketId", socket.id);
 
     try {
@@ -39,7 +38,7 @@ const UploadVideo = () => {
       setMessage("");
 
       await axios.post(
-        "https://mediastack-1.onrender.com/api/videos/upload",
+        `${import.meta.env.VITE_API_BASE_URL}/api/videos/upload`,
         formData,
         {
           withCredentials: true,
@@ -49,8 +48,8 @@ const UploadVideo = () => {
         }
       );
 
-      setMessage("Video uploaded successfully!");
-      setVideo(null);
+      setMessage("File uploaded successfully!");
+      setFile(null);
       setPreviewUrl(null);
     } catch (error) {
       setMessage(error.response?.data?.message || "Upload failed");
@@ -66,38 +65,38 @@ const UploadVideo = () => {
       </h1>
 
       <p style={{ marginBottom: "20px", color: "#555" }}>
-        Upload your first video or audio file
+        Upload your first video or image file
       </p>
 
-{/* Demo buttons */}
-<div
-  style={{
-    display: "flex",
-    flexWrap: "wrap",
-    gap: "10px",
-    marginBottom: "20px",
-  }}
->
-  {["product.mp4", "social.mp4", "background.mp4", "movie.mp4"].map(
-    (item) => (
-      <button
-        key={item}
-        type="button"
+      {/* Demo buttons */}
+      {/* <div
         style={{
-          padding: "10px 14px",
-          border: "1px solid #ddd",
-          borderRadius: "6px",
-          background: "#fff",
-          cursor: "pointer",
-          flex: "1 1 140px",   // 🔥 responsive magic
-          minWidth: "120px",
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "10px",
+          marginBottom: "20px",
         }}
       >
-        {item}
-      </button>
-    )
-  )}
-</div>
+        {["product.mp4", "social.mp4", "background.mp4", "movie.mp4"].map(
+          (item) => (
+            <button
+              key={item}
+              type="button"
+              style={{
+                padding: "10px 14px",
+                border: "1px solid #ddd",
+                borderRadius: "6px",
+                background: "#fff",
+                cursor: "pointer",
+                flex: "1 1 140px",   // 🔥 responsive magic
+                minWidth: "120px",
+              }}
+            >
+              {item}
+            </button>
+          )
+        )}
+      </div> */}
 
       <form onSubmit={handleSubmit}>
         {/* Upload box OR Video preview */}
@@ -117,12 +116,12 @@ const UploadVideo = () => {
           >
             <input
               type="file"
-              accept="video/*"
+              accept="video/*,image/*"
               hidden
               onChange={(e) => {
-                const file = e.target.files[0];
-                setVideo(file);
-                setPreviewUrl(URL.createObjectURL(file));
+                const selectedFile = e.target.files[0];
+                setFile(selectedFile);
+                setPreviewUrl(URL.createObjectURL(selectedFile));
               }}
             />
             <span style={{ fontSize: "16px", fontWeight: "500" }}>
@@ -131,22 +130,34 @@ const UploadVideo = () => {
           </label>
         ) : (
           <div style={{ marginBottom: "20px" }}>
-            <video
-              src={previewUrl}
-              controls
-              style={{
-                width: "100%",
-                height: "auto",
-                borderRadius: "8px",
-              }}
-            />
+            {file && file.type.startsWith("image/") ? (
+              <img
+                src={previewUrl}
+                alt="Preview"
+                style={{
+                  width: "100%",
+                  height: "auto",
+                  borderRadius: "8px",
+                }}
+              />
+            ) : (
+              <video
+                src={previewUrl}
+                controls
+                style={{
+                  width: "100%",
+                  height: "auto",
+                  borderRadius: "8px",
+                }}
+              />
+            )}
           </div>
         )}
 
         {/* Title input */}
         <input
           type="text"
-          placeholder="Video title"
+          placeholder="File title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           required
@@ -183,29 +194,29 @@ const UploadVideo = () => {
             {loading ? "Uploading..." : "Upload"}
           </button>
 
-          {video && (
-  <button
-    type="button"
-    onClick={() => {
-      setVideo(null);
-      setPreviewUrl(null);
-      setProgress(0);
-      setMessage("");
-      toast.success("Upload Canceled");
-    }}
-    style={{
-      padding: "10px 18px",
-      borderRadius: "6px",
-      border: "1px solid #ccc",
-      backgroundColor: "#000",
-      color: "#fff",
-      cursor: "pointer",
-      marginLeft: "8px",   // ✅ extra spacing
-    }}
-  >
-    Cancel
-  </button>
-)}
+          {file && (
+            <button
+              type="button"
+              onClick={() => {
+                setFile(null);
+                setPreviewUrl(null);
+                setProgress(0);
+                setMessage("");
+                toast.success("Upload Canceled");
+              }}
+              style={{
+                padding: "10px 18px",
+                borderRadius: "6px",
+                border: "1px solid #ccc",
+                backgroundColor: "#000",
+                color: "#fff",
+                cursor: "pointer",
+                marginLeft: "8px",   // ✅ extra spacing
+              }}
+            >
+              Cancel
+            </button>
+          )}
 
 
         </div>

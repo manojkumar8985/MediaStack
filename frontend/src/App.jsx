@@ -8,6 +8,7 @@ import userAuth from "./hooks/useAuthUser";
 import DashboardLayout from "./Dashboard";
 import MyVideos from "./pages/MyVideos";
 import ProfilePage from "./pages/Profile";
+import PublicGallery from "./pages/PublicGallery";
 
 function App() {
   const { user, isLoading } = userAuth();
@@ -19,74 +20,75 @@ function App() {
   return (
     <>
 
-     <Routes>
+      <Routes>
 
 
-  {!user && (
-    <>
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
+        {!user && (
+          <>
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/gallery" element={<PublicGallery />} />
 
 
-      <Route path="*" element={<Navigate to="/login" replace />} />
-    </>
-  )}
+            <Route path="*" element={<Navigate to="/login" replace />} />
+          </>
+        )}
 
 
-  {user!==null && (
-    <>
-      <Route
-        path="/"
-        element={
-          <DashboardLayout>
-            
-            <Home />
-          </DashboardLayout>
-        }
-      />
+        {user !== null && (
+          <>
+            <Route
+              path="/"
+              element={
+                <DashboardLayout>
 
-      <Route
-        path="/home"
-        element={
-          <DashboardLayout>
-            <Home />
-          </DashboardLayout>
-        }
-      />
+                  <Home />
+                </DashboardLayout>
+              }
+            />
 
-      <Route
-        path="/upload"
-        element={
-          <DashboardLayout>
-            <UploadVideo />
-          </DashboardLayout>
-        }
-      />
+            <Route
+              path="/home"
+              element={
+                <DashboardLayout>
+                  <Home />
+                </DashboardLayout>
+              }
+            />
 
-      <Route
-        path="/myvideos"
-        element={
-          <DashboardLayout>
-            <MyVideos />
-          </DashboardLayout>
-        }
-      />
+            <Route
+              path="/upload"
+              element={
+                <DashboardLayout>
+                  <UploadVideo />
+                </DashboardLayout>
+              }
+            />
 
-      <Route
-        path="/profile"
-        element={
-          <DashboardLayout>
-            <ProfilePage />
-          </DashboardLayout>
-        }
-      />
+            <Route
+              path="/myvideos"
+              element={
+                <DashboardLayout>
+                  <MyVideos />
+                </DashboardLayout>
+              }
+            />
 
-      {/* redirect login/signup if already logged in */}
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </>
-  )}
+            <Route
+              path="/profile"
+              element={
+                <DashboardLayout>
+                  <ProfilePage />
+                </DashboardLayout>
+              }
+            />
 
-</Routes>
+            {/* redirect login/signup if already logged in */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </>
+        )}
+
+      </Routes>
 
       <Toaster position="top-center" />
     </>

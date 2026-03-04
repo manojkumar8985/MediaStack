@@ -15,6 +15,7 @@ export default function Topbar({ sidebarExpanded, pageTitle = "Dashboard" }) {
   const [open, setOpen] = useState(false);            // desktop avatar dropdown
   const [mobileOpen, setMobileOpen] = useState(false); // mobile menu
   const dropdownRef = useRef(null);
+  const mobileDropdownRef = useRef(null);
 
   /* ================= USER ================= */
   useEffect(() => {
@@ -38,9 +39,13 @@ export default function Topbar({ sidebarExpanded, pageTitle = "Dashboard" }) {
   /* ================= CLICK OUTSIDE ================= */
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        setOpen(false);
+      const clickedOutsideDesktop = dropdownRef.current && !dropdownRef.current.contains(e.target);
+      const clickedOutsideMobile = mobileDropdownRef.current && !mobileDropdownRef.current.contains(e.target);
+
+      if (clickedOutsideDesktop && clickedOutsideMobile && mobileOpen) {
         setMobileOpen(false);
+      } else if (clickedOutsideDesktop && open) {
+        setOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -53,25 +58,25 @@ export default function Topbar({ sidebarExpanded, pageTitle = "Dashboard" }) {
     setMobileOpen(false);
   };
 
-const handleLogout = async () => {
-  try {
-    await axios.post(
-      "https://mediastack-1.onrender.com/auth/logout",
-      {},
-      { withCredentials: true }
-    );
+  const handleLogout = async () => {
+    try {
+      await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/auth/logout`,
+        {},
+        { withCredentials: true }
+      );
 
-    // ✅ IMPORTANT: explicitly remove auth user
-    queryClient.setQueryData(["authUser"], null);
-    queryClient.removeQueries({ queryKey: ["authUser"] });
+      // ✅ IMPORTANT: explicitly remove auth user
+      queryClient.setQueryData(["authUser"], null);
+      queryClient.removeQueries({ queryKey: ["authUser"] });
 
-    toast.success("Logout successful");
+      toast.success("Logout successful");
 
-    navigate("/login", { replace: true });
-  } catch (err) {
-    toast.error("Logout failed");
-  }
-};
+      navigate("/login", { replace: true });
+    } catch (err) {
+      toast.error("Logout failed");
+    }
+  };
 
 
   return (
@@ -90,9 +95,9 @@ const handleLogout = async () => {
         `}
       >
         {/* Title */}
-        <h1 className="text-base sm:text-lg font-semibold text-gray-800 dark:text-gray-100 truncate">
-         <Link to="/"> MediaStack</Link>
-        </h1>
+        <Link to="/">
+          <img src="/logo.png" alt="MediaStack" className="h-8 w-auto" />
+        </Link>
 
         {/* ================= RIGHT SIDE ================= */}
         <div className="flex items-center gap-2" ref={dropdownRef}>
@@ -106,16 +111,7 @@ const handleLogout = async () => {
 
           {/* ---------- DESKTOP ACTIONS ---------- */}
           <div className="hidden md:flex items-center gap-4">
-            <button
-              onClick={toggleDarkMode}
-              className="text-sm text-gray-600 dark:text-gray-300"
-            >
-              🌙
-            </button>
 
-            <button className="text-sm text-gray-600 dark:text-gray-300">
-              Docs
-            </button>
 
             {/* Avatar */}
             <div className="relative">
@@ -142,7 +138,7 @@ const handleLogout = async () => {
                   </div>
 
                   <button className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 text-white">
-                   <Link to="/profile"> Profile</Link>
+                    <Link to="/profile"> Profile</Link>
                   </button>
                   <button className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 text-white">
                     Settings
@@ -162,18 +158,7 @@ const handleLogout = async () => {
 
       {/* ================= MOBILE DROPDOWN ================= */}
       {mobileOpen && (
-        <div className="md:hidden fixed top-16 left-0 right-0 bg-white dark:bg-gray-900 border-t dark:border-gray-700 shadow-lg z-10">
-          <button
-            onClick={toggleDarkMode}
-            className="w-full px-4 py-4 text-left hover:bg-gray-100 dark:hover:bg-gray-700"
-          >
-            🌙 Dark Mode
-          </button>
-
-          <button className="w-full px-4 py-4 text-left hover:bg-gray-100 text-white">
-            Docs
-          </button>
-
+        <div ref={mobileDropdownRef} className="md:hidden fixed top-16 left-0 right-0 bg-white dark:bg-gray-900 border-t dark:border-gray-700 shadow-lg z-10">
           <div className="px-4 py-3 border-t  text-white">
             <p className="text-sm font-medium text-white">{user?.name}</p>
             <p className="text-xs text-gray-500 truncate text-white">{user?.email}</p>
