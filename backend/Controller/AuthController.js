@@ -1,6 +1,20 @@
 const Users = require("../Models/User.js");
 const jwt = require("jsonwebtoken");
 
+const getJwtCookieOptions = (req) => {
+  const isSecure =
+    req.secure ||
+    (typeof req.headers?.["x-forwarded-proto"] === "string" &&
+      req.headers["x-forwarded-proto"].includes("https"));
+
+  return {
+    httpOnly: true,
+    sameSite: isSecure ? "none" : "lax",
+    secure: isSecure,
+    path: "/",
+  };
+};
+
 /* ===================== SIGNUP ===================== */
 const signup = async (req, res) => {
   try {
@@ -27,13 +41,9 @@ const signup = async (req, res) => {
       { expiresIn: "7d" }
     );
 
-    // 🍪 SET COOKIE (IMPORTANT)
     res.cookie("jwt", token, {
+      ...getJwtCookieOptions(req),
       maxAge: 7 * 24 * 60 * 60 * 1000,
-      httpOnly: true,
-      sameSite: "none", // 🔥 CHANGE from strict/lax → none
-      secure: true,
-      path: "/", // 🔥 REQUIRED
     });
 
     res.status(201).json({
@@ -71,13 +81,9 @@ const login = async (req, res) => {
       { expiresIn: "7d" }
     );
 
-    // 🍪 SET COOKIE (MUST MATCH SIGNUP)
     res.cookie("jwt", token, {
+      ...getJwtCookieOptions(req),
       maxAge: 7 * 24 * 60 * 60 * 1000,
-      httpOnly: true,
-      sameSite: "none",
-      secure: true,
-      path: "/", // 🔥 REQUIRED
     });
 
     res.status(200).json({ message: "Login successful" });
@@ -91,13 +97,7 @@ const login = async (req, res) => {
 /* ===================== LOGOUT ===================== */
 const logout = async (req, res) => {
   try {
-    // ✅ COOKIE CLEAR (OPTIONS MUST MATCH LOGIN)
-    res.clearCookie("jwt", {
-      httpOnly: true,
-      sameSite: "none",
-      secure: true,
-      path: "/",
-    });
+    res.clearCookie("jwt", getJwtCookieOptions(req));
 
     res.status(200).json({ message: "Logout successful" });
   } catch (err) {
