@@ -9,6 +9,8 @@ import DashboardLayout from "./Dashboard";
 import MyVideos from "./pages/MyVideos";
 import ProfilePage from "./pages/Profile";
 import PublicGallery from "./pages/PublicGallery";
+import TextPage from "./pages/TextPage";
+import PublicTexts from "./pages/PublicTexts";
 
 function App() {
   const { user, isLoading } = userAuth();
@@ -27,12 +29,14 @@ function App() {
           <>
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
-            <Route path="/gallery" element={<PublicGallery />} />
-
+            
 
             <Route path="*" element={<Navigate to="/login" replace />} />
           </>
         )}
+        <Route path="/gallery" element={<PublicGallery />} />
+        <Route path="/public-texts" element={<PublicTexts />} />
+
 
 
         {user !== null && (
@@ -79,6 +83,15 @@ function App() {
               element={
                 <DashboardLayout>
                   <ProfilePage />
+                </DashboardLayout>
+              }
+            />
+
+            <Route
+              path="/texts"
+              element={
+                <DashboardLayout>
+                  <TextPage />
                 </DashboardLayout>
               }
             />

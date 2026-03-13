@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { useState } from "react";
-import { LayoutGrid, Video, Settings,User } from "lucide-react";
+import { LayoutGrid, Video, Settings, User, FileText } from "lucide-react";
 import { Link } from "react-router-dom";
 export default function Sidebar() {
   const [expanded, setExpanded] = useState(false);
@@ -46,6 +46,13 @@ export default function Sidebar() {
     to="/myvideos"
     icon={<Video size={20} />}
     label="Assets"
+    expanded={expanded}
+  />
+
+  <SidebarItem
+    to="/texts"
+    icon={<FileText size={20} />}
+    label="Texts"
     expanded={expanded}
   />
 

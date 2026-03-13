@@ -209,15 +209,25 @@ export default function Login() {
             </Link>
           </p>
 
-          <div className="mt-8 pt-6 border-t border-gray-100 text-center mt-6">
-            <Link
-              to="/gallery"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gray-50 hover:bg-gray-100 text-gray-700 font-medium rounded-xl transition-colors border border-gray-200"
-            >
-              <span className="text-xl">🎬</span>
-              View Public Timeline
-            </Link>
-          </div>
+          <div className="mt-8 pt-6 border-t border-gray-100 flex justify-center gap-4 mt-6">
+
+  <Link
+    to="/gallery"
+    className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gray-50 hover:bg-gray-100 text-gray-700 font-medium rounded-xl transition-colors border border-gray-200"
+  >
+    <span className="text-xl">🎬</span>
+    View Public Timeline
+  </Link>
+
+  <Link
+    to="/public-texts"
+    className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gray-50 hover:bg-gray-100 text-gray-700 font-medium rounded-xl transition-colors border border-gray-200"
+  >
+    <span className="text-xl">📢</span>
+    View Public Notices
+  </Link>
+
+</div>
         </motion.div>
       </div>
     </div>

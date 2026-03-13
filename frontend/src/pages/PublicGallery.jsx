@@ -41,8 +41,8 @@ export default function PublicGallery() {
             clearTimeout(timerRef.current);
         }
 
-        // If it's an image, auto-advance after 3 seconds
-        if (isImage(currentAsset.videoUrl)) {
+        // Auto-advance for images and text after 3 seconds
+        if (currentAsset.type === 'text' || isImage(currentAsset.videoUrl)) {
             timerRef.current = setTimeout(() => {
                 goToNext();
             }, 3000);
@@ -67,7 +67,6 @@ export default function PublicGallery() {
     }
 
     const currentAsset = assets[currentIndex];
-    const assetIsImage = isImage(currentAsset.videoUrl);
 
     return (
         <div className="relative h-screen w-screen bg-black overflow-hidden flex flex-col items-center justify-center">
@@ -85,8 +84,14 @@ export default function PublicGallery() {
             </div>
 
             {/* Main Media Display */}
-            <div className="w-full h-full flex items-center justify-center">
-                {assetIsImage ? (
+            <div className="w-full h-full flex items-center justify-center p-8">
+                {currentAsset.type === 'text' ? (
+                    <div className="max-w-4xl text-center p-12 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl animate-fadeIn">
+                        <p className="text-4xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-white via-blue-200 to-blue-400 leading-tight drop-shadow-2xl">
+                            {currentAsset.content}
+                        </p>
+                    </div>
+                ) : currentAsset.type === 'image' ? (
                     <img
                         key={currentAsset._id || currentIndex}
                         src={currentAsset.videoUrl}
@@ -110,7 +115,9 @@ export default function PublicGallery() {
             <div className="absolute bottom-0 w-full p-6 bg-gradient-to-t from-black/80 to-transparent">
                 <div className="max-w-4xl mx-auto flex justify-between items-end">
                     <div>
-                        <h2 className="text-white text-3xl font-bold mb-2 drop-shadow-lg">{currentAsset.title}</h2>
+                        {currentAsset.title && (
+                            <h2 className="text-white text-3xl font-bold mb-2 drop-shadow-lg">{currentAsset.title}</h2>
+                        )}
                         <div className="flex gap-2">
                             {assets.map((_, idx) => (
                                 <div

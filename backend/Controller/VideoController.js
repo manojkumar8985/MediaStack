@@ -1,5 +1,6 @@
 const cloudinary = require("../cloudnary");
 const Video = require("../Models/Video");
+const Text = require("../Models/Text");
 
 exports.uploadVideo = async (req, res) => {
   const io = req.app.get("io");
@@ -65,7 +66,22 @@ exports.getPublicVideos = async (req, res) => {
     const videos = await Video.find({ status: { $ne: "processing" } }).sort({
       createdAt: -1,
     });
-    res.status(200).json(videos);
+    
+    const texts = await Text.find().sort({ createdAt: -1 });
+
+    // Combine and mark types
+    const combined = [
+      ...videos.map(v => ({ 
+        ...v.toObject(), 
+        type: v.videoUrl.match(/\.(jpeg|jpg|gif|png|webp|avif)$/i) ? 'image' : 'video' 
+      })),
+      ...texts.map(t => ({ ...t.toObject(), type: 'text' }))
+    ];
+
+    // Re-sort combined list by createdAt
+    combined.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    res.status(200).json(combined);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

@@ -8,6 +8,7 @@ require("dotenv").config();
 
 const Auth = require("./router/auth.js");
 const videoRoutes = require("./router/video.js");
+const textRoutes = require("./router/text.js");
 
 const app = express();
 app.set('trust proxy', 1); // Trust the first proxy
@@ -43,6 +44,7 @@ app.use(cors({
 
 app.use("/auth", Auth);
 app.use("/api/videos", videoRoutes);
+app.use("/api/texts", textRoutes);
 
 app.get("/", (req, res) => {
   res.send("done");
