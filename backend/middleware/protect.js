@@ -30,15 +30,9 @@ const protect = async (req, res, next) => {
     if (error?.name === "JsonWebTokenError" || error?.name === "TokenExpiredError") {
       return res.status(401).json({ message: "Unauthorized - Invalid token" });
     }
-
     return res.status(500).json({ message: "Internal Server Error" });
   }
-
-
 }
-
-
-
 
 const storage = multer.diskStorage({});
 

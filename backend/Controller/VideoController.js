@@ -1,4 +1,6 @@
-const cloudinary = require("../cloudnary");
+const fs = require("fs");
+const { ref, uploadBytes, getDownloadURL } = require("firebase/storage");
+const { storage } = require("../firebase");
 const Video = require("../Models/Video");
 const Text = require("../Models/Text");
 
@@ -23,10 +25,20 @@ exports.uploadVideo = async (req, res) => {
       io.emit("upload-progress", { percent: 70 });
     }, 800);
 
-    // ☁️ Upload to Cloudinary
-    const result = await cloudinary.uploader.upload(req.file.path, {
-      resource_type: "auto",
-    });
+    // ☁️ Upload to Firebase Storage
+    const fileBuffer = fs.readFileSync(req.file.path);
+    const fileName = `uploads/${Date.now()}-${req.file.originalname}`;
+    const storageRef = ref(storage, fileName);
+
+    const metadata = {
+      contentType: req.file.mimetype,
+    };
+
+    await uploadBytes(storageRef, fileBuffer, metadata);
+    const downloadURL = await getDownloadURL(storageRef);
+
+    // Clean up local file
+    fs.unlinkSync(req.file.path);
 
     io.emit("upload-progress", { percent: 100 });
 
@@ -34,7 +46,7 @@ exports.uploadVideo = async (req, res) => {
     const video = await Video.create({
       user: req.user.id,
       title,
-      videoUrl: result.secure_url,
+      videoUrl: downloadURL,
       status: "processing", // ✅ valid
     });
 

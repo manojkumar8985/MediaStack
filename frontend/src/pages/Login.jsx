@@ -5,30 +5,8 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useState } from "react";
 
-// const features = [
-//   {
-//     title: "Shockingly affordable 💸",
-//     desc: "Powerful travel tools at a budget-friendly price.",
-//     color: "from-pink-400 to-pink-600",
-//   },
-//   {
-//     title: "Blazing fast ⚡",
-//     desc: "Optimized performance with instant responses.",
-//     color: "from-green-400 to-green-600",
-//   },
-//   {
-//     title: "Beautiful video 🎬",
-//     desc: "Immersive video experiences with smooth playback.",
-//     color: "from-blue-400 to-blue-600",
-//   },
-//   {
-//     title: "Built for developers 👨‍💻",
-//     desc: "Clean architecture & scalable components.",
-//     color: "from-yellow-400 to-yellow-600",
-//   },
-// ];
 
-export default function Login() {
+export default function Login({user}) {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
@@ -61,7 +39,7 @@ export default function Login() {
     }
 
     try {
-      await axios.post(
+      const res = await axios.post(
         `${import.meta.env.VITE_API_BASE_URL}/auth/login`,
         {
           userName: userInfo.fullName,
@@ -69,10 +47,19 @@ export default function Login() {
         },
         { withCredentials: true }
       );
-
-      queryClient.invalidateQueries({ queryKey: ["authUser"] });
-      toast.success("Login successful!");
-      navigate("/");
+      console.log(res);
+      
+      if (res.status === 200) {
+        navigate("/");
+        // queryClient.invalidateQueries({ queryKey: ["authUser"] });
+        toast.success("Login successful!");
+        console.log(user);
+      }else{
+        toast.success("Login failed!");
+        console.log("Login failed!");
+      }
+      // localStorage.setItem("user", JSON.stringify(user));
+      
     } catch (err) {
       setProblem(err.response?.data?.message || "Something went wrong");
     }

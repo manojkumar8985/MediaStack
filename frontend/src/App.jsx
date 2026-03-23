@@ -21,15 +21,11 @@ function App() {
 
   return (
     <>
-
       <Routes>
-
-
         {!user && (
           <>
-            <Route path="/login" element={<Login />} />
+            <Route path="/login" element={<Login user={user}/>} />
             <Route path="/signup" element={<Signup />} />
-            
 
             <Route path="*" element={<Navigate to="/login" replace />} />
           </>
@@ -37,16 +33,13 @@ function App() {
         <Route path="/gallery" element={<PublicGallery />} />
         <Route path="/public-texts" element={<PublicTexts />} />
 
-
-
-        {user !== null && (
+        {/* {user !== null && ( */}
           <>
             <Route
               path="/"
               element={
                 <DashboardLayout>
-
-                  <Home />
+                  <Home user={user} />
                 </DashboardLayout>
               }
             />
@@ -55,7 +48,7 @@ function App() {
               path="/home"
               element={
                 <DashboardLayout>
-                  <Home />
+                  <Home user={user} />
                 </DashboardLayout>
               }
             />
@@ -99,7 +92,7 @@ function App() {
             {/* redirect login/signup if already logged in */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </>
-        )}
+        {/* )} */}
 
       </Routes>
 

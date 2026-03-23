@@ -10,7 +10,7 @@ const getJwtCookieOptions = (req) => {
   return {
     httpOnly: true,
     sameSite: isSecure ? "none" : "lax",
-    secure: isSecure,
+    secure: isSecure, // true in production HTTPS, false on local HTTP
     path: "/",
   };
 };

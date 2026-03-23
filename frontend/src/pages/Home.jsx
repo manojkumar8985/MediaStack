@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
 
-const Home = ({ sidebarExpanded }) => {
+const Home = ({ sidebarExpanded, user}) => {
+      console.log(user);
+      localStorage.setItem("user", JSON.stringify(user));
+  
   return (
     <div
       style={{
